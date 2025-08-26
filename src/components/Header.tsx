@@ -7,6 +7,8 @@ import { ThemeToggle } from "./ThemeToggle";
 export function Header() {
     const [open, setOpen] = useState(false);
 
+    const linkCls = "relative text-foreground transition-colors hover:text-primary after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full";
+
     return (
         <header className="fixed top-0 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border z-50">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -20,17 +22,17 @@ export function Header() {
                     </Link>
 
                     {/* Center: Desktop nav */}
-                    <nav className="hidden md:flex items-center space-x-8">
-                        <Link href="/" className="text-foreground hover:text-primary transition-colors">
+                    <nav className="hidden md:flex items-center space-x-10">
+                        <Link href="/" className={linkCls}>
                             Home
                         </Link>
-                        <Link href="/collections" className="text-foreground hover:text-primary transition-colors">
+                        <Link href="/collections" className={linkCls}>
                             Collections
                         </Link>
-                        <Link href="/about" className="text-foreground hover:text-primary transition-colors">
+                        <Link href="/about" className={linkCls}>
                             About Us
                         </Link>
-                        <Link href="/contact" className="text-foreground hover:text-primary transition-colors">
+                        <Link href="/contact" className={linkCls}>
                             Contact
                         </Link>
                     </nav>
@@ -38,7 +40,7 @@ export function Header() {
                     {/* Right: icons */}
                     <div className="hidden md:flex items-center space-x-4">
                         <ThemeToggle />
-                        <button className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2 rounded-full font-semibold">
+                        <button className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2 rounded-full font-semibold shadow-sm">
                             Shop Now
                         </button>
                     </div>
@@ -105,6 +107,8 @@ export function Header() {
                     </div>
                 )}
             </div>
+            {/* Subtle gold divider for desktop */}
+            <div className="hidden md:block h-0.5 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
         </header>
     );
 }

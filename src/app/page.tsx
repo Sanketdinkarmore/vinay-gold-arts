@@ -1,9 +1,11 @@
-import Image from "next/image";
 import { NewArrivals } from "../components/NewArrivals";
 import { DiscountedProducts } from "../components/DiscountedProducts";
 import { FeaturedCategories } from "../components/FeaturedCategories";
+import { BestSellers } from "../components/BestSellers";
 import { NewsletterCTA } from "../components/NewsletterCTA";
 import { Footer } from "../components/Footer";
+import { Button } from "../components/ui/button";
+import { ShieldCheck, Gem, HeartHandshake } from "lucide-react";
 
 export default function Home() {
   return (
@@ -32,27 +34,40 @@ export default function Home() {
                 and timeless beauty.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <button className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 text-lg rounded-full font-semibold">
+                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 text-lg rounded-full font-semibold">
                   Explore Collection
-                </button>
-                <button className="border border-primary text-primary hover:bg-primary hover:text-primary-foreground px-8 py-3 text-lg rounded-full font-semibold bg-transparent">
+                </Button>
+                <Button variant="outline" className="border border-primary text-primary hover:bg-primary hover:text-primary-foreground px-8 py-3 text-lg rounded-full font-semibold bg-transparent">
                   Book Appointment
-                </button>
+                </Button>
+              </div>
+              {/* Trust Badges (Desktop Only) */}
+              <div className="hidden lg:flex items-center justify-center lg:justify-start gap-8 mt-12">
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <ShieldCheck className="w-5 h-5 text-primary" />
+                  <span>Certified 22K Gold</span>
+                </div>
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Gem className="w-5 h-5 text-primary" />
+                  <span>Handcrafted Detail</span>
+                </div>
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <HeartHandshake className="w-5 h-5 text-primary" />
+                  <span>Lifetime Polish</span>
+                </div>
               </div>
             </div>
 
             {/* Right content - Jewelry display */}
             <div className="relative">
               <div className="relative w-full max-w-md mx-auto">
-                <div className="glass-surface rounded-2xl p-2">
-                  <Image
-                    src="/window.svg"
-                    alt="Premium Gold Jewelry Display"
-                    width={500}
-                    height={600}
-                    className="w-full h-auto rounded-xl"
-                  />
+                <div className="glass-surface rounded-2xl p-8">
+                  <div className="w-full h-96 bg-gradient-to-br from-primary/10 via-secondary/5 to-primary/5 rounded-xl flex items-center justify-center">
+                    <span className="text-8xl">💎</span>
+                  </div>
                 </div>
+                {/* Soft gradient halo */}
+                <div className="absolute inset-0 -m-4 rounded-2xl bg-gradient-to-br from-primary/20 via-transparent to-primary/10 blur-xl opacity-70 animate-pulse-slow"></div>
                 <div className="absolute -top-4 -right-4 w-24 h-24 bg-primary/10 rounded-full blur-xl"></div>
                 <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-primary/5 rounded-full blur-2xl"></div>
               </div>
@@ -69,6 +84,9 @@ export default function Home() {
 
       {/* Featured Categories Section */}
       <FeaturedCategories />
+
+      {/* Best Sellers Section */}
+      <BestSellers />
 
       {/* Newsletter CTA Section */}
       <NewsletterCTA />

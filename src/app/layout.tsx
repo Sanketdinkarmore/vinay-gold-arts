@@ -3,6 +3,7 @@ import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "../components/theme-provider";
 import { Header } from "../components/Header";
+import { WhatsAppFab } from "../components/WhatsAppFab";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -30,9 +31,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${playfair.variable} ${inter.variable}`}>
       <body className="font-sans antialiased">
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+        <ThemeProvider defaultTheme="light">
           <Header />
           {children}
+          <WhatsAppFab />
         </ThemeProvider>
       </body>
     </html>
