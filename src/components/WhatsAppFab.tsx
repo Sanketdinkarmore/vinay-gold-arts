@@ -56,7 +56,7 @@ export function WhatsAppFab() {
                             <div className="flex items-center gap-3">
                                 <span className="text-2xl">🏺</span>
                                 <div>
-                                    <div className="font-medium">Collections & Catalog</div>
+                                    <div className="font-medium text-white">Collections & Catalog</div>
                                     <div className="text-sm text-gray-600 dark:text-gray-400">Browse our jewelry collection</div>
                                 </div>
                             </div>
@@ -69,7 +69,7 @@ export function WhatsAppFab() {
                             <div className="flex items-center gap-3">
                                 <span className="text-2xl">💰</span>
                                 <div>
-                                    <div className="font-medium">Price Range & Quotes</div>
+                                    <div className="font-medium text-white">Price Range & Quotes</div>
                                     <div className="text-sm text-gray-600 dark:text-gray-400">Get pricing information</div>
                                 </div>
                             </div>
@@ -82,7 +82,7 @@ export function WhatsAppFab() {
                             <div className="flex items-center gap-3">
                                 <span className="text-2xl">📅</span>
                                 <div>
-                                    <div className="font-medium">Book Appointment</div>
+                                    <div className="font-medium text-white">Book Appointment</div>
                                     <div className="text-sm text-gray-600 dark:text-gray-400">Schedule a visit</div>
                                 </div>
                             </div>
@@ -95,7 +95,7 @@ export function WhatsAppFab() {
                             <div className="flex items-center gap-3">
                                 <span className="text-2xl">❓</span>
                                 <div>
-                                    <div className="font-medium">Other Questions</div>
+                                    <div className="font-medium text-white">Other Questions</div>
                                     <div className="text-sm text-gray-600 dark:text-gray-400">Ask anything else</div>
                                 </div>
                             </div>

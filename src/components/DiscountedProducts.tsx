@@ -1,4 +1,5 @@
 import { Button } from "./ui/button";
+import { SectionHeader } from "./SectionHeader";
 
 const discountedProducts = [
     {
@@ -31,15 +32,12 @@ export function DiscountedProducts() {
     return (
         <section className="py-20 bg-muted/30">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center mb-10 md:mb-16">
-                    <h2 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-3">Special Offers</h2>
-                    <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto mb-6">
-                        Up to 25% Off on Wedding Collection
-                    </p>
-                    <div className="inline-block glass-surface text-primary px-6 py-2 rounded-full font-semibold">
-                        Limited Time Only
-                    </div>
-                </div>
+                <SectionHeader
+                    eyebrow="Special Offers"
+                    title="Up to 25% Off"
+                    subtitle="Wedding Collection picks with limited-time discounts"
+                    className="mb-12"
+                />
 
                 {/* Mobile horizontal scroll */}
                 <div className="md:hidden -mx-4 px-4 overflow-x-auto no-scrollbar snap-x snap-mandatory flex gap-4 mb-10">

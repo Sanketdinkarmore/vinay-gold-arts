@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SectionHeader } from "./SectionHeader";
 
 const categories = [
     {
@@ -35,14 +36,12 @@ export function FeaturedCategories() {
     return (
         <section className="py-20 bg-background">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center mb-10 md:mb-16">
-                    <h2 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-3">
-                        Shop by Category
-                    </h2>
-                    <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
-                        Explore our curated collections organized by your preferences
-                    </p>
-                </div>
+                <SectionHeader
+                    eyebrow="Explore"
+                    title="Shop by Category"
+                    subtitle="Explore our curated collections organized by your preferences"
+                    className="mb-12"
+                />
 
                 {/* Mobile horizontal scroll */}
                 <div className="md:hidden -mx-4 px-4 overflow-x-auto no-scrollbar snap-x snap-mandatory flex gap-4">

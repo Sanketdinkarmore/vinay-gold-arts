@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export function Footer() {
     return (
@@ -7,10 +8,12 @@ export function Footer() {
                 <div className="text-center">
                     {/* Logo */}
                     <Link href="/" className="inline-flex items-center space-x-2 mb-8">
-                        <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
-                            <span className="text-primary-foreground font-bold">Vn</span>
+                        <div className="w-10 h-10 rounded-full overflow-hidden ring-1 ring-border">
+                            <Image src="/logo1.jpg" alt="Vnay Arts Logo" width={32} height={32} className="h-10 w-10 object-cover" />
                         </div>
-                        <span className="font-serif font-bold text-2xl text-foreground">Vinay Arts</span>
+                        <span className="font-serif font-bold text-2xl text-foreground">Vnay Gold Creations</span>
+                        {/* Tagline for clarity */}
+                        <span className="block text-xs font-medium text-primary mt-1 tracking-wide">1 Gram Gold Jewellery</span>
                     </Link>
 
                     {/* Links */}

@@ -2,6 +2,8 @@
 
 import { Star, Heart, Eye, ShoppingCart, ArrowRight } from "lucide-react";
 import { Button } from "./ui/button";
+import { SectionHeader } from "./SectionHeader";
+import { Reveal } from "@/components/Reveal";
 
 const newArrivalsData = [
     {
@@ -54,20 +56,12 @@ export function NewArrivals() {
     return (
         <section className="py-16 bg-gradient-to-br from-background via-card/20 to-muted/30">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Section Header */}
-                <div className="text-center mb-12">
-                    <div className="inline-flex items-center gap-2 mb-4">
-                        <div className="w-3 h-3 bg-primary rounded-full animate-pulse"></div>
-                        <span className="text-sm font-medium text-primary uppercase tracking-wider">Just Arrived</span>
-                        <div className="w-3 h-3 bg-primary rounded-full animate-pulse"></div>
-                    </div>
-                    <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-                        New Arrivals
-                    </h2>
-                    <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                        Be the first to discover our latest jewelry collections, crafted with the finest materials
-                    </p>
-                </div>
+                <SectionHeader
+                    eyebrow="Just Arrived"
+                    title="New Arrivals"
+                    subtitle="Be the first to discover our latest jewelry collections, crafted with the finest materials"
+                    className="mb-12"
+                />
 
                 {/* Desktop Grid Layout */}
                 <div className="hidden lg:grid lg:grid-cols-4 gap-6 mb-8">
@@ -145,54 +139,55 @@ export function NewArrivals() {
                 <div className="lg:hidden mb-8">
                     <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-4">
                         {newArrivalsData.map((product) => (
-                            <div
-                                key={product.id}
-                                className="flex-shrink-0 w-72 bg-card rounded-xl p-4 shadow-lg border border-border/50"
-                            >
-                                {/* Product Image */}
-                                <div className="relative mb-4 overflow-hidden rounded-lg">
-                                    <div className="aspect-square bg-gradient-to-br from-primary/10 via-secondary/5 to-primary/5 rounded-lg flex items-center justify-center">
-                                        <span className="text-3xl">💍</span>
-                                    </div>
+                            <Reveal key={product.id} y={12} once>
+                                <div
+                                    className="flex-shrink-0 w-72 bg-card rounded-xl p-4 shadow-lg border border-border/50"
+                                >
+                                    {/* Product Image */}
+                                    <div className="relative mb-4 overflow-hidden rounded-lg">
+                                        <div className="aspect-square bg-gradient-to-br from-primary/10 via-secondary/5 to-primary/5 rounded-lg flex items-center justify-center">
+                                            <span className="text-3xl">💍</span>
+                                        </div>
 
-                                    {/* Badges */}
-                                    <div className="absolute top-2 left-2 flex gap-1">
-                                        <span className="glass-surface px-2 py-1 rounded-full text-xs font-bold text-primary-foreground bg-primary">
-                                            NEW
-                                        </span>
-                                        <span className="glass-surface px-2 py-1 rounded-full text-xs font-bold text-secondary-foreground bg-secondary">
-                                            -{product.discount}%
-                                        </span>
-                                    </div>
-                                </div>
-
-                                {/* Product Info */}
-                                <div className="space-y-2">
-                                    <div className="flex items-center justify-between">
-                                        <span className="text-xs text-muted-foreground font-medium">{product.category}</span>
-                                        <div className="flex items-center gap-1">
-                                            <Star className="w-3 h-3 fill-primary text-primary" />
-                                            <span className="text-xs font-semibold">{product.rating}</span>
+                                        {/* Badges */}
+                                        <div className="absolute top-2 left-2 flex gap-1">
+                                            <span className="glass-surface px-2 py-1 rounded-full text-xs font-bold text-primary-foreground bg-primary">
+                                                NEW
+                                            </span>
+                                            <span className="glass-surface px-2 py-1 rounded-full text-xs font-bold text-secondary-foreground bg-secondary">
+                                                -{product.discount}%
+                                            </span>
                                         </div>
                                     </div>
 
-                                    <h3 className="font-semibold text-sm text-foreground line-clamp-2">
-                                        {product.name}
-                                    </h3>
+                                    {/* Product Info */}
+                                    <div className="space-y-2">
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-xs text-muted-foreground font-medium">{product.category}</span>
+                                            <div className="flex items-center gap-1">
+                                                <Star className="w-3 h-3 fill-primary text-primary" />
+                                                <span className="text-xs font-semibold">{product.rating}</span>
+                                            </div>
+                                        </div>
 
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-lg font-bold text-foreground">₹{product.price.toLocaleString()}</span>
-                                        <span className="text-sm text-muted-foreground line-through">
-                                            ₹{product.originalPrice.toLocaleString()}
-                                        </span>
+                                        <h3 className="font-semibold text-sm text-foreground line-clamp-2">
+                                            {product.name}
+                                        </h3>
+
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-lg font-bold text-foreground">₹{product.price.toLocaleString()}</span>
+                                            <span className="text-sm text-muted-foreground line-through">
+                                                ₹{product.originalPrice.toLocaleString()}
+                                            </span>
+                                        </div>
+
+                                        <Button size="sm" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
+                                            <ShoppingCart className="w-3 h-3 mr-1" />
+                                            Add to Cart
+                                        </Button>
                                     </div>
-
-                                    <Button size="sm" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
-                                        <ShoppingCart className="w-3 h-3 mr-1" />
-                                        Add to Cart
-                                    </Button>
                                 </div>
-                            </div>
+                            </Reveal>
                         ))}
                     </div>
                 </div>

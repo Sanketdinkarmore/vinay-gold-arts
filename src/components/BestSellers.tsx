@@ -2,6 +2,8 @@
 
 import { Star, Heart, Eye, ShoppingCart } from "lucide-react";
 import { Button } from "./ui/button";
+import { SectionHeader } from "./SectionHeader";
+import { Reveal } from "@/components/Reveal";
 
 const bestSellersData = [
     {
@@ -76,15 +78,12 @@ export function BestSellers() {
     return (
         <section className="py-16 bg-gradient-to-br from-background via-card/30 to-muted/50">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Section Header */}
-                <div className="text-center mb-12">
-                    <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-                        Best Sellers & Trending
-                    </h2>
-                    <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                        Discover our most loved jewelry pieces that customers can&apos;t stop talking about
-                    </p>
-                </div>
+                <SectionHeader
+                    eyebrow="Most Loved"
+                    title="Best Sellers & Trending"
+                    subtitle="Discover our most loved jewelry pieces that customers can&apos;t stop talking about"
+                    className="mb-12"
+                />
 
                 {/* Desktop Grid Layout */}
                 <div className="hidden lg:grid lg:grid-cols-3 gap-8 mb-8">
@@ -161,60 +160,61 @@ export function BestSellers() {
                 <div className="lg:hidden mb-8">
                     <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-4">
                         {bestSellersData.map((product) => (
-                            <div
-                                key={product.id}
-                                className="flex-shrink-0 w-72 bg-card rounded-xl p-4 shadow-lg"
-                            >
-                                {/* Product Image */}
-                                <div className="relative mb-4 overflow-hidden rounded-lg">
-                                    <div className="aspect-square bg-gradient-to-br from-primary/10 to-secondary/10 rounded-lg flex items-center justify-center">
-                                        <span className="text-3xl">💎</span>
-                                    </div>
+                            <Reveal key={product.id} y={12} once>
+                                <div
+                                    className="flex-shrink-0 w-72 bg-card rounded-xl p-4 shadow-lg"
+                                >
+                                    {/* Product Image */}
+                                    <div className="relative mb-4 overflow-hidden rounded-lg">
+                                        <div className="aspect-square bg-gradient-to-br from-primary/10 to-secondary/10 rounded-lg flex items-center justify-center">
+                                            <span className="text-3xl">💎</span>
+                                        </div>
 
-                                    {/* Badges */}
-                                    <div className="absolute top-2 left-2 flex gap-1">
-                                        {product.isNew && (
-                                            <span className="glass-surface px-2 py-1 rounded-full text-xs font-semibold text-primary-foreground bg-primary">
-                                                NEW
-                                            </span>
-                                        )}
-                                        {product.isTrending && (
-                                            <span className="glass-surface px-2 py-1 rounded-full text-xs font-semibold text-secondary-foreground bg-secondary">
-                                                HOT
-                                            </span>
-                                        )}
-                                    </div>
-                                </div>
-
-                                {/* Product Info */}
-                                <div className="space-y-2">
-                                    <div className="flex items-center justify-between">
-                                        <span className="text-xs text-muted-foreground font-medium">{product.category}</span>
-                                        <div className="flex items-center gap-1">
-                                            <Star className="w-3 h-3 fill-primary text-primary" />
-                                            <span className="text-xs font-semibold">{product.rating}</span>
+                                        {/* Badges */}
+                                        <div className="absolute top-2 left-2 flex gap-1">
+                                            {product.isNew && (
+                                                <span className="glass-surface px-2 py-1 rounded-full text-xs font-semibold text-primary-foreground bg-primary">
+                                                    NEW
+                                                </span>
+                                            )}
+                                            {product.isTrending && (
+                                                <span className="glass-surface px-2 py-1 rounded-full text-xs font-semibold text-secondary-foreground bg-secondary">
+                                                    HOT
+                                                </span>
+                                            )}
                                         </div>
                                     </div>
 
-                                    <h3 className="font-semibold text-sm text-foreground line-clamp-2">
-                                        {product.name}
-                                    </h3>
+                                    {/* Product Info */}
+                                    <div className="space-y-2">
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-xs text-muted-foreground font-medium">{product.category}</span>
+                                            <div className="flex items-center gap-1">
+                                                <Star className="w-3 h-3 fill-primary text-primary" />
+                                                <span className="text-xs font-semibold">{product.rating}</span>
+                                            </div>
+                                        </div>
 
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-lg font-bold text-foreground">₹{product.price.toLocaleString()}</span>
-                                        {product.originalPrice > product.price && (
-                                            <span className="text-sm text-muted-foreground line-through">
-                                                ₹{product.originalPrice.toLocaleString()}
-                                            </span>
-                                        )}
+                                        <h3 className="font-semibold text-sm text-foreground line-clamp-2">
+                                            {product.name}
+                                        </h3>
+
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-lg font-bold text-foreground">₹{product.price.toLocaleString()}</span>
+                                            {product.originalPrice > product.price && (
+                                                <span className="text-sm text-muted-foreground line-through">
+                                                    ₹{product.originalPrice.toLocaleString()}
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        <Button size="sm" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
+                                            <ShoppingCart className="w-3 h-3 mr-1" />
+                                            Add to Cart
+                                        </Button>
                                     </div>
-
-                                    <Button size="sm" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
-                                        <ShoppingCart className="w-3 h-3 mr-1" />
-                                        Add to Cart
-                                    </Button>
                                 </div>
-                            </div>
+                            </Reveal>
                         ))}
                     </div>
                 </div>

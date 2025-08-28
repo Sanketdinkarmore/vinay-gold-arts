@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { ThemeToggle } from "./ThemeToggle";
+import Image from "next/image";
 
 export function Header() {
     const [open, setOpen] = useState(false);
@@ -15,10 +16,10 @@ export function Header() {
                 <div className="flex items-center justify-between h-16">
                     {/* Left: Logo */}
                     <Link href="/" className="flex items-center space-x-2">
-                        <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-                            <span className="text-primary-foreground font-bold text-sm">Vn</span>
+                        <div className="h-8 w-8 rounded-full overflow-hidden ring-1 ring-border">
+                            <Image src="/logo1.jpg" alt="Vinay Arts Logo" width={32} height={32} className="h-8 w-8 object-cover" />
                         </div>
-                        <span className="font-serif font-bold text-xl text-foreground">Vinay Arts</span>
+                        <span className="font-serif font-bold text-xl text-foreground">Vnay Gold Creations</span>
                     </Link>
 
                     {/* Center: Desktop nav */}
