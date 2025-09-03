@@ -6,6 +6,7 @@ import { NewsletterCTA } from "../components/NewsletterCTA";
 import { Footer } from "../components/Footer";
 import { Button } from "../components/ui/button";
 import { ShieldCheck, Gem, HeartHandshake } from "lucide-react";
+import { HeroMarquee } from "../components/hero-marquee";
 
 export default function Home() {
   return (
@@ -23,17 +24,21 @@ export default function Home() {
         </div>
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left content */}
-            <div className="text-center lg:text-left">
-              <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
-                Timeless Gold. <span className="text-primary">Eternal Elegance.</span>
+          <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2 md:py-16">
+            {/* Image above on mobile, right on desktop */}
+            <div className="relative order-1 aspect-[4/3] w-full overflow-hidden rounded md:order-2 group">
+              <HeroMarquee />
+            </div>
+
+            {/* Text content */}
+            <div className="order-2 text-center md:order-1 md:text-left">
+              <h1 className="text-pretty text-4xl leading-tight text-foreground md:text-5xl font-serif font-bold mb-6">
+                Make milestones <span className="text-primary">memorable</span>
               </h1>
-              <p className="text-lg sm:text-xl text-muted-foreground mb-8 max-w-2xl">
-                Explore our premium gold jewelry crafted with perfection. Each piece tells a story of luxury, tradition,
-                and timeless beauty.
+              <p className="mt-4 max-w-md text-muted-foreground leading-relaxed text-lg">
+                Celebrate with handmade, custom jewelry crafted for life&apos;s most meaningful moments.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+              <div className="mt-6 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                 <Button className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 text-lg rounded-full font-semibold">
                   Explore Collection
                 </Button>
@@ -55,21 +60,6 @@ export default function Home() {
                   <HeartHandshake className="w-5 h-5 text-primary" />
                   <span>Lifetime Polish</span>
                 </div>
-              </div>
-            </div>
-
-            {/* Right content - Jewelry display */}
-            <div className="relative">
-              <div className="relative w-full max-w-md mx-auto">
-                <div className="glass-surface rounded-2xl p-8">
-                  <div className="w-full h-96 bg-gradient-to-br from-primary/10 via-secondary/5 to-primary/5 rounded-xl flex items-center justify-center">
-                    <span className="text-8xl">💎</span>
-                  </div>
-                </div>
-                {/* Soft gradient halo */}
-                <div className="absolute inset-0 -m-4 rounded-2xl bg-gradient-to-br from-primary/20 via-transparent to-primary/10 blur-xl opacity-70 animate-pulse-slow"></div>
-                <div className="absolute -top-4 -right-4 w-24 h-24 bg-primary/10 rounded-full blur-xl"></div>
-                <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-primary/5 rounded-full blur-2xl"></div>
               </div>
             </div>
           </div>

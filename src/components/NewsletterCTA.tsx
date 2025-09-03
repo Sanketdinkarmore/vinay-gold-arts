@@ -48,7 +48,7 @@ export function NewsletterCTA() {
                         <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4">
                             Stay Updated with Exclusive Offers
                         </h2>
-                        <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto">
+                        <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto"> 
                             Be the first to know about new collections, special discounts, and exclusive jewelry events
                         </p>
                     </div>

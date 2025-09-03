@@ -9,7 +9,7 @@ export function Footer() {
                     {/* Logo */}
                     <Link href="/" className="inline-flex items-center space-x-2 mb-8">
                         <div className="w-10 h-10 rounded-full overflow-hidden ring-1 ring-border">
-                            <Image src="/logo1.jpg" alt="Vnay Arts Logo" width={32} height={32} className="h-10 w-10 object-cover" />
+                            <Image src="/logo1.jpg" alt="Vnay Arts Logo" width={36} height={33} className="h-10 w-10 object-cover" />
                         </div>
                         <span className="font-serif font-bold text-2xl text-foreground">Vnay Gold Creations</span>
                         {/* Tagline for clarity */}
