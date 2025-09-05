@@ -4,11 +4,13 @@ import { Star, Heart, Eye, ShoppingCart, ArrowRight } from "lucide-react";
 import { Button } from "./ui/button";
 import { SectionHeader } from "./SectionHeader";
 import { Reveal } from "@/components/Reveal";
+import Link from "next/link";
 
 const newArrivalsData = [
     {
         id: 1,
         name: "Modern Gold Ring Set",
+        slug: "modern-gold-ring-set",
         price: 35000,
         originalPrice: 42000,
         rating: 4.8,
@@ -20,6 +22,7 @@ const newArrivalsData = [
     {
         id: 2,
         name: "Elegant Gold Chain",
+        slug: "elegant-gold-chain",
         price: 85000,
         originalPrice: 95000,
         rating: 4.9,
@@ -31,6 +34,7 @@ const newArrivalsData = [
     {
         id: 3,
         name: "Designer Gold Earrings",
+        slug: "designer-gold-earrings",
         price: 55000,
         originalPrice: 65000,
         rating: 4.7,
@@ -42,6 +46,7 @@ const newArrivalsData = [
     {
         id: 4,
         name: "Premium Gold Bracelet",
+        slug: "premium-gold-bracelet",
         price: 75000,
         originalPrice: 85000,
         rating: 4.8,
@@ -66,10 +71,8 @@ export function NewArrivals() {
                 {/* Desktop Grid Layout */}
                 <div className="hidden lg:grid lg:grid-cols-4 gap-6 mb-8">
                     {newArrivalsData.map((product) => (
-                        <div
-                            key={product.id}
-                            className="group relative bg-card rounded-2xl p-4 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-border/50 hover:border-primary/30"
-                        >
+                        <Link key={product.id} href={`/product/${product.slug || `product-${product.id}`}`}>
+                            <div className="group relative bg-card rounded-2xl p-4 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-border/50 hover:border-primary/30 cursor-pointer">
                             {/* Product Image */}
                             <div className="relative mb-4 overflow-hidden rounded-xl">
                                 <div className="aspect-square bg-gradient-to-br from-primary/10 via-secondary/5 to-primary/5 rounded-xl flex items-center justify-center">
@@ -131,7 +134,8 @@ export function NewArrivals() {
                                     Add to Cart
                                 </Button>
                             </div>
-                        </div>
+                            </div>
+                        </Link>
                     ))}
                 </div>
 
@@ -140,9 +144,10 @@ export function NewArrivals() {
                     <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-4">
                         {newArrivalsData.map((product) => (
                             <Reveal key={product.id} y={12} once>
-                                <div
-                                    className="flex-shrink-0 w-72 bg-card rounded-xl p-4 shadow-lg border border-border/50"
-                                >
+                                <Link href={`/product/${product.slug || `product-${product.id}`}`}>
+                                    <div
+                                        className="flex-shrink-0 w-72 bg-card rounded-xl p-4 shadow-lg border border-border/50 cursor-pointer hover:shadow-xl transition-all duration-300"
+                                    >
                                     {/* Product Image */}
                                     <div className="relative mb-4 overflow-hidden rounded-lg">
                                         <div className="aspect-square bg-gradient-to-br from-primary/10 via-secondary/5 to-primary/5 rounded-lg flex items-center justify-center">
@@ -186,7 +191,8 @@ export function NewArrivals() {
                                             Add to Cart
                                         </Button>
                                     </div>
-                                </div>
+                                    </div>
+                                </Link>
                             </Reveal>
                         ))}
                     </div>
@@ -194,10 +200,12 @@ export function NewArrivals() {
 
                 {/* View All Button */}
                 <div className="text-center">
-                    <Button variant="outline" size="lg" className="group border-primary text-primary hover:bg-primary hover:text-primary-foreground px-8 py-3 rounded-full transition-all duration-300">
-                        View All New Arrivals
-                        <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
-                    </Button>
+                    <Link href="/collections">
+                        <Button variant="outline" size="lg" className="group border-primary text-primary hover:bg-primary hover:text-primary-foreground px-8 py-3 rounded-full transition-all duration-300">
+                            View All New Arrivals
+                            <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+                        </Button>
+                    </Link>
                 </div>
             </div>
         </section>

@@ -4,11 +4,13 @@ import { Star, Heart, Eye, ShoppingCart } from "lucide-react";
 import { Button } from "./ui/button";
 import { SectionHeader } from "./SectionHeader";
 import { Reveal } from "@/components/Reveal";
+import Link from "next/link";
 
 const bestSellersData = [
     {
         id: 1,
         name: "Traditional 22K Gold Ring",
+        slug: "traditional-22k-gold-ring",
         price: 45000,
         originalPrice: 52000,
         rating: 4.9,
@@ -20,6 +22,7 @@ const bestSellersData = [
     {
         id: 2,
         name: "Elegant Gold Necklace Set",
+        slug: "elegant-gold-necklace-set",
         price: 125000,
         originalPrice: 145000,
         rating: 4.8,
@@ -31,6 +34,7 @@ const bestSellersData = [
     {
         id: 3,
         name: "Bridal Gold Earrings",
+        slug: "bridal-gold-earrings",
         price: 85000,
         originalPrice: 95000,
         rating: 4.9,
@@ -42,6 +46,7 @@ const bestSellersData = [
     {
         id: 4,
         name: "Classic Gold Bracelet",
+        slug:"classic-gold-bracelet",
         price: 65000,
         originalPrice: 72000,
         rating: 4.7,
@@ -53,6 +58,7 @@ const bestSellersData = [
     {
         id: 5,
         name: "Modern Gold Pendant",
+        slug: "modern-gold-pendant",
         price: 35000,
         originalPrice: 40000,
         rating: 4.8,
@@ -64,6 +70,7 @@ const bestSellersData = [
     {
         id: 6,
         name: "Royal Gold Bangle Set",
+        slug: "royal-gold-bangle-set",
         price: 95000,
         originalPrice: 110000,
         rating: 4.9,
@@ -88,10 +95,8 @@ export function BestSellers() {
                 {/* Desktop Grid Layout */}
                 <div className="hidden lg:grid lg:grid-cols-3 gap-8 mb-8">
                     {bestSellersData.slice(0, 3).map((product) => (
-                        <div
-                            key={product.id}
-                            className="group relative bg-card rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2"
-                        >
+                        <Link key={product.id} href={`/product/${product.slug || `product-${product.id}`}`}>
+                            <div className="group relative bg-card rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 cursor-pointer">
                             {/* Product Image */}
                             <div className="relative mb-6 overflow-hidden rounded-xl">
                                 <div className="aspect-square bg-gradient-to-br from-primary/10 to-secondary/10 rounded-xl flex items-center justify-center">
@@ -152,7 +157,8 @@ export function BestSellers() {
                                     Add to Cart
                                 </Button>
                             </div>
-                        </div>
+                            </div>
+                        </Link>
                     ))}
                 </div>
 
@@ -161,9 +167,10 @@ export function BestSellers() {
                     <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-4">
                         {bestSellersData.map((product) => (
                             <Reveal key={product.id} y={12} once>
-                                <div
-                                    className="flex-shrink-0 w-72 bg-card rounded-xl p-4 shadow-lg"
-                                >
+                                <Link href={`/product/${product.slug || `product-${product.id}`}`}>
+                                    <div
+                                        className="flex-shrink-0 w-72 bg-card rounded-xl p-4 shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300"
+                                    >
                                     {/* Product Image */}
                                     <div className="relative mb-4 overflow-hidden rounded-lg">
                                         <div className="aspect-square bg-gradient-to-br from-primary/10 to-secondary/10 rounded-lg flex items-center justify-center">
@@ -213,7 +220,8 @@ export function BestSellers() {
                                             Add to Cart
                                         </Button>
                                     </div>
-                                </div>
+                                    </div>
+                                </Link>
                             </Reveal>
                         ))}
                     </div>
@@ -221,9 +229,11 @@ export function BestSellers() {
 
                 {/* View All Button */}
                 <div className="text-center">
-                    <Button variant="outline" size="lg" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground px-8 py-3 rounded-full">
-                        View All Best Sellers
-                    </Button>
+                    <Link href="/collections">
+                        <Button variant="outline" size="lg" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground px-8 py-3 rounded-full">
+                            View All Best Sellers
+                        </Button>
+                    </Link>
                 </div>
             </div>
         </section>

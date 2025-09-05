@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "./ui/button";
 import { SectionHeader } from "./SectionHeader";
 import { Reveal } from "@/components/Reveal";
+import Link from "next/link";
 
 const categories = [
     {
@@ -102,10 +103,12 @@ export function FeaturedCategories() {
                                     {category.description}
                                 </p>
 
-                                <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-2xl py-3 group-hover:shadow-lg transition-all duration-300">
-                                    Explore {category.name}
-                                    <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
-                                </Button>
+                                <Link href="/collections">
+                                    <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-2xl py-3 group-hover:shadow-lg transition-all duration-300">
+                                        Explore {category.name}
+                                        <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+                                    </Button>
+                                </Link>
                             </div>
                         </div>
                     ))}
@@ -116,34 +119,36 @@ export function FeaturedCategories() {
                     <div className="grid grid-cols-2 gap-4">
                         {categories.map((category) => (
                             <Reveal key={category.id} y={12} once>
-                                <div className="group relative bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-lg border border-white/20 cursor-pointer">
-                                    {/* Category Image */}
-                                    <div className="relative mb-4 overflow-hidden rounded-xl">
-                                        <div className={`aspect-square bg-gradient-to-br ${category.gradient} rounded-xl flex items-center justify-center transition-transform duration-500 group-hover:scale-105`}>
-                                            <span className="text-3xl">{category.emoji}</span>
-                                        </div>
-                                    </div>
-
-                                    {/* Category Info */}
-                                    <div className="space-y-2">
-                                        <div className="flex items-center justify-between">
-                                            <h3 className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors">
-                                                {category.name}
-                                            </h3>
-                                            <span className="text-xs text-muted-foreground bg-muted/50 px-2 py-1 rounded-full">
-                                                {category.count}
-                                            </span>
+                                <Link href="/collections">
+                                    <div className="group relative bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-lg border border-white/20 cursor-pointer">
+                                        {/* Category Image */}
+                                        <div className="relative mb-4 overflow-hidden rounded-xl">
+                                            <div className={`aspect-square bg-gradient-to-br ${category.gradient} rounded-xl flex items-center justify-center transition-transform duration-500 group-hover:scale-105`}>
+                                                <span className="text-3xl">{category.emoji}</span>
+                                            </div>
                                         </div>
 
-                                        <p className="text-xs text-muted-foreground line-clamp-2">
-                                            {category.description}
-                                        </p>
+                                        {/* Category Info */}
+                                        <div className="space-y-2">
+                                            <div className="flex items-center justify-between">
+                                                <h3 className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors">
+                                                    {category.name}
+                                                </h3>
+                                                <span className="text-xs text-muted-foreground bg-muted/50 px-2 py-1 rounded-full">
+                                                    {category.count}
+                                                </span>
+                                            </div>
 
-                                        <Button size="sm" variant="outline" className="w-full border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-xl text-xs">
-                                            Explore
-                                        </Button>
+                                            <p className="text-xs text-muted-foreground line-clamp-2">
+                                                {category.description}
+                                            </p>
+
+                                            <Button size="sm" variant="outline" className="w-full border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-xl text-xs">
+                                                Explore
+                                            </Button>
+                                        </div>
                                     </div>
-                                </div>
+                                </Link>
                             </Reveal>
                         ))}
                     </div>
@@ -151,10 +156,12 @@ export function FeaturedCategories() {
 
                 {/* View All Categories Button */}
                 <div className="text-center">
-                    <Button variant="outline" size="lg" className="group border-primary text-primary hover:bg-primary hover:text-primary-foreground px-10 py-4 rounded-full transition-all duration-300 text-lg font-semibold shadow-lg hover:shadow-xl">
-                        View All Categories
-                        <ArrowRight className="w-5 h-5 ml-3 group-hover:translate-x-1 transition-transform duration-300" />
-                    </Button>
+                    <Link href="/collections">
+                        <Button variant="outline" size="lg" className="group border-primary text-primary hover:bg-primary hover:text-primary-foreground px-10 py-4 rounded-full transition-all duration-300 text-lg font-semibold shadow-lg hover:shadow-xl">
+                            View All Categories
+                            <ArrowRight className="w-5 h-5 ml-3 group-hover:translate-x-1 transition-transform duration-300" />
+                        </Button>
+                    </Link>
                 </div>
             </div>
         </div>

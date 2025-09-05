@@ -7,6 +7,7 @@ import { Footer } from "../components/Footer";
 import { Button } from "../components/ui/button";
 import { ShieldCheck, Gem, HeartHandshake, Sparkles, Star, Crown, Zap } from "lucide-react";
 import { HeroMarquee } from "../components/hero-marquee";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -72,20 +73,24 @@ export default function Home() {
                 Celebrate with handmade, custom jewelry crafted for life&apos;s most meaningful moments.
               </p>
               <div className="mt-6 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 text-lg rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 relative overflow-hidden group">
-                  <span className="relative z-10 flex items-center gap-2">
-                    <Gem className="w-5 h-5" />
-                    Explore Collection
-                  </span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-                </Button>
-                <Button variant="outline" className="border border-primary text-primary hover:bg-primary hover:text-primary-foreground px-8 py-3 text-lg rounded-full font-semibold bg-transparent glass-surface hover:shadow-lg transition-all duration-300 transform hover:scale-105 relative overflow-hidden group">
-                  <span className="relative z-10 flex items-center gap-2">
-                    <Crown className="w-5 h-5" />
-                    Book Appointment
-                  </span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-                </Button>
+                <Link href="/collections">
+                  <Button className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 text-lg rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 relative overflow-hidden group">
+                    <span className="relative z-10 flex items-center gap-2">
+                      <Gem className="w-5 h-5" />
+                      Explore Collection
+                    </span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                  </Button>
+                </Link>
+                <Link href="/contact">
+                  <Button variant="outline" className="border border-primary text-primary hover:bg-primary hover:text-primary-foreground px-8 py-3 text-lg rounded-full font-semibold bg-transparent glass-surface hover:shadow-lg transition-all duration-300 transform hover:scale-105 relative overflow-hidden group">
+                    <span className="relative z-10 flex items-center gap-2">
+                      <Crown className="w-5 h-5" />
+                      Book Appointment
+                    </span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                  </Button>
+                </Link>
               </div>
               {/* Trust Badges (Desktop Only) */}
               <div className="hidden lg:flex items-center justify-center lg:justify-start gap-6 mt-12">
