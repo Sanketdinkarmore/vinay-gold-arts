@@ -1,87 +1,64 @@
 "use client";
 
-import { Star, Heart, Eye, ShoppingCart } from "lucide-react";
+import { Star, Heart, ShoppingCart, Share2 } from "lucide-react";
 import { Button } from "./ui/button";
 import { SectionHeader } from "./SectionHeader";
 import { Reveal } from "@/components/Reveal";
+import { useCart } from "@/contexts/CartContext";
+import { useWishlist } from "@/contexts/WishlistContext";
+import { mockProducts, getCategoryEmoji } from "@/lib/products";
+import { shareProduct } from "@/lib/share";
 import Link from "next/link";
 
-const bestSellersData = [
-    {
-        id: 1,
-        name: "Traditional 22K Gold Ring",
-        slug: "traditional-22k-gold-ring",
-        price: 45000,
-        originalPrice: 52000,
-        rating: 4.9,
-        reviews: 127,
-        category: "Rings",
-        isNew: false,
-        isTrending: true,
-    },
-    {
-        id: 2,
-        name: "Elegant Gold Necklace Set",
-        slug: "elegant-gold-necklace-set",
-        price: 125000,
-        originalPrice: 145000,
-        rating: 4.8,
-        reviews: 89,
-        category: "Necklaces",
-        isNew: true,
-        isTrending: true,
-    },
-    {
-        id: 3,
-        name: "Bridal Gold Earrings",
-        slug: "bridal-gold-earrings",
-        price: 85000,
-        originalPrice: 95000,
-        rating: 4.9,
-        reviews: 156,
-        category: "Earrings",
-        isNew: false,
-        isTrending: true,
-    },
-    {
-        id: 4,
-        name: "Classic Gold Bracelet",
-        slug:"classic-gold-bracelet",
-        price: 65000,
-        originalPrice: 72000,
-        rating: 4.7,
-        reviews: 94,
-        category: "Bracelets",
-        isNew: false,
-        isTrending: false,
-    },
-    {
-        id: 5,
-        name: "Modern Gold Pendant",
-        slug: "modern-gold-pendant",
-        price: 35000,
-        originalPrice: 40000,
-        rating: 4.8,
-        reviews: 73,
-        category: "Pendants",
-        isNew: true,
-        isTrending: true,
-    },
-    {
-        id: 6,
-        name: "Royal Gold Bangle Set",
-        slug: "royal-gold-bangle-set",
-        price: 95000,
-        originalPrice: 110000,
-        rating: 4.9,
-        reviews: 112,
-        category: "Bangles",
-        isNew: false,
-        isTrending: true,
-    },
-];
+// Get best sellers from shared product data
+const bestSellersData = mockProducts.filter(product => product.isBestSeller).slice(0, 6);
 
 export function BestSellers() {
+    const { addToCart, isInCart, getItemQuantity } = useCart();
+    const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+
+    const handleAddToCart = (product: typeof mockProducts[0]) => {
+        const cartItem = {
+            id: product.id,
+            name: product.name,
+            slug: product.slug,
+            price: product.price,
+            originalPrice: product.originalPrice,
+            discountPercentage: product.discountPercentage,
+            category: product.category,
+            purity: product.purity,
+            weight: product.weight,
+            image: product.mainImage,
+        };
+        addToCart(cartItem);
+    };
+
+    const handleWishlistToggle = (product: typeof mockProducts[0]) => {
+        const wishlistItem = {
+            id: product.id,
+            name: product.name,
+            slug: product.slug,
+            price: product.price,
+            originalPrice: product.originalPrice,
+            category: product.category,
+            purity: product.purity,
+            weight: product.weight,
+            image: product.mainImage,
+            rating: product.rating,
+            reviews: product.reviews,
+        };
+
+        if (isInWishlist(product.id)) {
+            removeFromWishlist(product.id);
+        } else {
+            addToWishlist(wishlistItem);
+        }
+    };
+
+    const handleShare = async (product: typeof mockProducts[0]) => {
+        await shareProduct(product);
+    };
+
     return (
         <section className="py-16 bg-gradient-to-br from-background via-card/30 to-muted/50">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -100,7 +77,7 @@ export function BestSellers() {
                             {/* Product Image */}
                             <div className="relative mb-6 overflow-hidden rounded-xl">
                                 <div className="aspect-square bg-gradient-to-br from-primary/10 to-secondary/10 rounded-xl flex items-center justify-center">
-                                    <span className="text-4xl">💎</span>
+                                    <span className="text-4xl">{getCategoryEmoji(product.category)}</span>
                                 </div>
 
                                 {/* Badges */}
@@ -110,7 +87,7 @@ export function BestSellers() {
                                             NEW
                                         </span>
                                     )}
-                                    {product.isTrending && (
+                                    {product.isBestSeller && (
                                         <span className="glass-surface px-3 py-1 rounded-full text-xs font-semibold text-secondary-foreground bg-secondary">
                                             TRENDING
                                         </span>
@@ -119,11 +96,27 @@ export function BestSellers() {
 
                                 {/* Quick Actions */}
                                 <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                    <button className="glass-surface w-10 h-10 rounded-full flex items-center justify-center text-foreground hover:text-primary transition-colors">
-                                        <Heart className="w-5 h-5" />
+                                    <button 
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            handleWishlistToggle(product);
+                                        }}
+                                        className={`glass-surface w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
+                                            isInWishlist(product.id) 
+                                                ? 'text-red-500 hover:text-red-600' 
+                                                : 'text-foreground hover:text-primary'
+                                        }`}
+                                    >
+                                        <Heart className={`w-5 h-5 ${isInWishlist(product.id) ? 'fill-current' : ''}`} />
                                     </button>
-                                    <button className="glass-surface w-10 h-10 rounded-full flex items-center justify-center text-foreground hover:text-primary transition-colors">
-                                        <Eye className="w-5 h-5" />
+                                    <button 
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            handleShare(product);
+                                        }}
+                                        className="glass-surface w-10 h-10 rounded-full flex items-center justify-center text-foreground hover:text-primary transition-colors"
+                                    >
+                                        <Share2 className="w-5 h-5" />
                                     </button>
                                 </div>
                             </div>
@@ -152,9 +145,15 @@ export function BestSellers() {
                                     )}
                                 </div>
 
-                                <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
+                                <Button 
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        handleAddToCart(product);
+                                    }}
+                                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+                                >
                                     <ShoppingCart className="w-4 h-4 mr-2" />
-                                    Add to Cart
+                                    {isInCart(product.id) ? `In Cart (${getItemQuantity(product.id)})` : 'Add to Cart'}
                                 </Button>
                             </div>
                             </div>
@@ -174,7 +173,7 @@ export function BestSellers() {
                                     {/* Product Image */}
                                     <div className="relative mb-4 overflow-hidden rounded-lg">
                                         <div className="aspect-square bg-gradient-to-br from-primary/10 to-secondary/10 rounded-lg flex items-center justify-center">
-                                            <span className="text-3xl">💎</span>
+                                            <span className="text-3xl">{getCategoryEmoji(product.category)}</span>
                                         </div>
 
                                         {/* Badges */}
@@ -184,7 +183,7 @@ export function BestSellers() {
                                                     NEW
                                                 </span>
                                             )}
-                                            {product.isTrending && (
+                                            {product.isBestSeller && (
                                                 <span className="glass-surface px-2 py-1 rounded-full text-xs font-semibold text-secondary-foreground bg-secondary">
                                                     HOT
                                                 </span>
@@ -215,9 +214,16 @@ export function BestSellers() {
                                             )}
                                         </div>
 
-                                        <Button size="sm" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
+                                        <Button 
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                handleAddToCart(product);
+                                            }}
+                                            size="sm" 
+                                            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+                                        >
                                             <ShoppingCart className="w-3 h-3 mr-1" />
-                                            Add to Cart
+                                            {isInCart(product.id) ? `In Cart (${getItemQuantity(product.id)})` : 'Add to Cart'}
                                         </Button>
                                     </div>
                                     </div>

@@ -1,63 +1,64 @@
 "use client";
 
-import { Star, Heart, Eye, ShoppingCart, ArrowRight } from "lucide-react";
+import { Star, Heart, ShoppingCart, ArrowRight, Share2 } from "lucide-react";
 import { Button } from "./ui/button";
 import { SectionHeader } from "./SectionHeader";
 import { Reveal } from "@/components/Reveal";
+import { useCart } from "@/contexts/CartContext";
+import { useWishlist } from "@/contexts/WishlistContext";
+import { mockProducts, getCategoryEmoji } from "@/lib/products";
+import { shareProduct } from "@/lib/share";
 import Link from "next/link";
 
-const newArrivalsData = [
-    {
-        id: 1,
-        name: "Modern Gold Ring Set",
-        slug: "modern-gold-ring-set",
-        price: 35000,
-        originalPrice: 42000,
-        rating: 4.8,
-        reviews: 45,
-        category: "Rings",
-        isNew: true,
-        discount: 17,
-    },
-    {
-        id: 2,
-        name: "Elegant Gold Chain",
-        slug: "elegant-gold-chain",
-        price: 85000,
-        originalPrice: 95000,
-        rating: 4.9,
-        reviews: 67,
-        category: "Necklaces",
-        isNew: true,
-        discount: 11,
-    },
-    {
-        id: 3,
-        name: "Designer Gold Earrings",
-        slug: "designer-gold-earrings",
-        price: 55000,
-        originalPrice: 65000,
-        rating: 4.7,
-        reviews: 38,
-        category: "Earrings",
-        isNew: true,
-        discount: 15,
-    },
-    {
-        id: 4,
-        name: "Premium Gold Bracelet",
-        slug: "premium-gold-bracelet",
-        price: 75000,
-        originalPrice: 85000,
-        rating: 4.8,
-        reviews: 52,
-        category: "Bracelets",
-        isNew: true,
-        discount: 12,
-    },
-];
+// Get new arrivals from shared product data
+const newArrivalsData = mockProducts.filter(product => product.isNew).slice(0, 4);
 
 export function NewArrivals() {
+    const { addToCart, isInCart, getItemQuantity } = useCart();
+    const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+
+    const handleAddToCart = (product: typeof mockProducts[0]) => {
+        const cartItem = {
+            id: product.id,
+            name: product.name,
+            slug: product.slug,
+            price: product.price,
+            originalPrice: product.originalPrice,
+            discountPercentage: product.discountPercentage,
+            category: product.category,
+            purity: product.purity,
+            weight: product.weight,
+            image: product.mainImage,
+        };
+        addToCart(cartItem);
+    };
+
+    const handleWishlistToggle = (product: typeof mockProducts[0]) => {
+        const wishlistItem = {
+            id: product.id,
+            name: product.name,
+            slug: product.slug,
+            price: product.price,
+            originalPrice: product.originalPrice,
+            category: product.category,
+            purity: product.purity,
+            weight: product.weight,
+            image: product.mainImage,
+            rating: product.rating,
+            reviews: product.reviews,
+        };
+
+        if (isInWishlist(product.id)) {
+            removeFromWishlist(product.id);
+        } else {
+            addToWishlist(wishlistItem);
+        }
+    };
+
+    const handleShare = async (product: typeof mockProducts[0]) => {
+        await shareProduct(product);
+    };
+
     return (
         <section className="py-16 bg-gradient-to-br from-background via-card/20 to-muted/30">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -76,7 +77,7 @@ export function NewArrivals() {
                             {/* Product Image */}
                             <div className="relative mb-4 overflow-hidden rounded-xl">
                                 <div className="aspect-square bg-gradient-to-br from-primary/10 via-secondary/5 to-primary/5 rounded-xl flex items-center justify-center">
-                                    <span className="text-4xl">💍</span>
+                                    <span className="text-4xl">{getCategoryEmoji(product.category)}</span>
                                 </div>
 
                                 {/* New Badge */}
@@ -88,18 +89,34 @@ export function NewArrivals() {
 
                                 {/* Discount Badge */}
                                 <div className="absolute top-3 right-3">
-                                    <span className="glass-surface px-3 py-1 rounded-full text-xs font-bold text-secondary-foreground bg-secondary">
-                                        -{product.discount}%
-                                    </span>
+                                            <span className="glass-surface px-3 py-1 rounded-full text-xs font-bold text-secondary-foreground bg-secondary">
+                                                -{product.discountPercentage}%
+                                            </span>
                                 </div>
 
                                 {/* Quick Actions */}
                                 <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
-                                    <button className="glass-surface w-10 h-10 rounded-full flex items-center justify-center text-foreground hover:text-primary transition-colors hover:scale-110">
-                                        <Heart className="w-5 h-5" />
+                                    <button 
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            handleWishlistToggle(product);
+                                        }}
+                                        className={`glass-surface w-10 h-10 rounded-full flex items-center justify-center transition-colors hover:scale-110 ${
+                                            isInWishlist(product.id) 
+                                                ? 'text-red-500 hover:text-red-600' 
+                                                : 'text-foreground hover:text-primary'
+                                        }`}
+                                    >
+                                        <Heart className={`w-5 h-5 ${isInWishlist(product.id) ? 'fill-current' : ''}`} />
                                     </button>
-                                    <button className="glass-surface w-10 h-10 rounded-full flex items-center justify-center text-foreground hover:text-primary transition-colors hover:scale-110">
-                                        <Eye className="w-5 h-5" />
+                                    <button 
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            handleShare(product);
+                                        }}
+                                        className="glass-surface w-10 h-10 rounded-full flex items-center justify-center text-foreground hover:text-primary transition-colors hover:scale-110"
+                                    >
+                                        <Share2 className="w-5 h-5" />
                                     </button>
                                 </div>
 
@@ -129,9 +146,15 @@ export function NewArrivals() {
                                     </span>
                                 </div>
 
-                                <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground group-hover:shadow-lg transition-all duration-300">
+                                <Button 
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        handleAddToCart(product);
+                                    }}
+                                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground group-hover:shadow-lg transition-all duration-300"
+                                >
                                     <ShoppingCart className="w-4 h-4 mr-2" />
-                                    Add to Cart
+                                    {isInCart(product.id) ? `In Cart (${getItemQuantity(product.id)})` : 'Add to Cart'}
                                 </Button>
                             </div>
                             </div>
@@ -151,7 +174,7 @@ export function NewArrivals() {
                                     {/* Product Image */}
                                     <div className="relative mb-4 overflow-hidden rounded-lg">
                                         <div className="aspect-square bg-gradient-to-br from-primary/10 via-secondary/5 to-primary/5 rounded-lg flex items-center justify-center">
-                                            <span className="text-3xl">💍</span>
+                                            <span className="text-3xl">{getCategoryEmoji(product.category)}</span>
                                         </div>
 
                                         {/* Badges */}
@@ -160,7 +183,7 @@ export function NewArrivals() {
                                                 NEW
                                             </span>
                                             <span className="glass-surface px-2 py-1 rounded-full text-xs font-bold text-secondary-foreground bg-secondary">
-                                                -{product.discount}%
+                                                -{product.discountPercentage}%
                                             </span>
                                         </div>
                                     </div>
@@ -186,9 +209,16 @@ export function NewArrivals() {
                                             </span>
                                         </div>
 
-                                        <Button size="sm" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
+                                        <Button 
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                handleAddToCart(product);
+                                            }}
+                                            size="sm" 
+                                            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+                                        >
                                             <ShoppingCart className="w-3 h-3 mr-1" />
-                                            Add to Cart
+                                            {isInCart(product.id) ? `In Cart (${getItemQuantity(product.id)})` : 'Add to Cart'}
                                         </Button>
                                     </div>
                                     </div>

@@ -103,7 +103,7 @@ export function FeaturedCategories() {
                                     {category.description}
                                 </p>
 
-                                <Link href="/collections">
+                                <Link href={`/collections?category=${encodeURIComponent(category.name)}`}>
                                     <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-2xl py-3 group-hover:shadow-lg transition-all duration-300">
                                         Explore {category.name}
                                         <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
@@ -119,7 +119,7 @@ export function FeaturedCategories() {
                     <div className="grid grid-cols-2 gap-4">
                         {categories.map((category) => (
                             <Reveal key={category.id} y={12} once>
-                                <Link href="/collections">
+                                <Link href={`/collections?category=${encodeURIComponent(category.name)}`}>
                                     <div className="group relative bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-lg border border-white/20 cursor-pointer">
                                         {/* Category Image */}
                                         <div className="relative mb-4 overflow-hidden rounded-xl">

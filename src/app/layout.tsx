@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "../components/theme-provider";
+import { CartProvider } from "../contexts/CartContext";
+import { WishlistProvider } from "../contexts/WishlistContext";
 import { Header } from "../components/Header";
 import { WhatsAppFab } from "../components/WhatsAppFab";
 
@@ -32,9 +34,13 @@ export default function RootLayout({
     <html lang="en" className={`${playfair.variable} ${inter.variable}`}>
       <body className="font-sans antialiased">
         <ThemeProvider defaultTheme="light">
-          <Header />
-          {children}
-          <WhatsAppFab />
+          <CartProvider>
+            <WishlistProvider>
+              <Header />
+              {children}
+              <WhatsAppFab />
+            </WishlistProvider>
+          </CartProvider>
         </ThemeProvider>
       </body>
     </html>

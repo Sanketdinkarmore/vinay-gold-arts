@@ -1,8 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/Reveal";
+import { useCart } from "@/contexts/CartContext";
+import { useWishlist } from "@/contexts/WishlistContext";
+import { mockProducts, getCategoryEmoji, getRelatedProducts } from "@/lib/products";
+import { shareProduct, shareToWhatsApp, shareToFacebook, shareToTwitter, shareToInstagram } from "@/lib/share";
 import { 
   Star, 
   Heart, 
@@ -15,134 +20,147 @@ import {
   Sparkles,
   Check,
   Minus,
-  Plus
+  Plus,
+  MessageCircle,
+  Facebook,
+  Twitter,
+  Instagram
 } from "lucide-react";
 import Link from "next/link";
 
-// Mock data - will be replaced with real data from database
-const mockProduct = {
-  id: 1,
-  name: "Elegant Gold Ring",
-  slug: "elegant-gold-ring",
-  price: 45000,
-  originalPrice: 55000,
-  discountPercentage: 18,
-  category: "Rings",
-  purity: "22K",
-  weight: 8.5,
-  images: ["/ring1.jpg", "/ring2.jpg", "/ring3.jpg"],
-  mainImage: "/ring1.jpg",
-  isNew: true,
-  isBestSeller: false,
-  isDiscounted: true,
-  isFeatured: true,
-  rating: 4.8,
-  reviews: 124,
-  shortDescription: "Beautiful handcrafted gold ring with intricate design",
-  description: "This exquisite gold ring is meticulously crafted by our skilled artisans using traditional techniques passed down through generations. The intricate design features delicate patterns that catch the light beautifully, making it perfect for special occasions or everyday elegance. Made from pure 22K gold, this ring promises durability and timeless beauty.",
-  specifications: {
-    material: "22K Gold",
-    weight: "8.5 grams",
-    purity: "22 Karat",
-    finish: "Polished",
-    warranty: "Lifetime Polish Service",
-    origin: "Handcrafted in India"
-  },
-  features: [
-    "Handcrafted with traditional techniques",
-    "22K pure gold construction",
-    "Intricate design patterns",
-    "Lifetime polish service included",
-    "Comes with authenticity certificate",
-    "Perfect for special occasions"
-  ]
-};
-
-const relatedProducts = [
-  {
-    id: 2,
-    name: "Diamond Necklace",
-    slug: "diamond-necklace",
-    price: 125000,
-    originalPrice: 150000,
-    discountPercentage: 17,
-    category: "Necklaces",
-    purity: "18K",
-    weight: 25.2,
-    images: ["/necklace1.jpg"],
-    mainImage: "/necklace1.jpg",
-    isNew: false,
-    isBestSeller: true,
-    isDiscounted: true,
-    isFeatured: true,
-    rating: 4.9,
-    reviews: 89,
-    shortDescription: "Stunning diamond necklace perfect for special occasions"
-  },
-  {
-    id: 3,
-    name: "Pearl Earrings",
-    slug: "pearl-earrings",
-    price: 35000,
-    originalPrice: 42000,
-    discountPercentage: 17,
-    category: "Earrings",
-    purity: "22K",
-    weight: 12.8,
-    images: ["/earrings1.jpg"],
-    mainImage: "/earrings1.jpg",
-    isNew: true,
-    isBestSeller: false,
-    isDiscounted: true,
-    isFeatured: false,
-    rating: 4.7,
-    reviews: 67,
-    shortDescription: "Classic pearl earrings with gold setting"
-  },
-  {
-    id: 4,
-    name: "Gold Bracelet",
-    slug: "gold-bracelet",
-    price: 28000,
-    originalPrice: 35000,
-    discountPercentage: 20,
-    category: "Bracelets",
-    purity: "22K",
-    weight: 15.5,
-    images: ["/bracelet1.jpg"],
-    mainImage: "/bracelet1.jpg",
-    isNew: false,
-    isBestSeller: true,
-    isDiscounted: true,
-    isFeatured: true,
-    rating: 4.6,
-    reviews: 156,
-    shortDescription: "Elegant gold bracelet with traditional patterns"
-  }
-];
 
 export default function ProductPage() {
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [selectedSize] = useState("");
+  const [product, setProduct] = useState<typeof mockProducts[0] | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [showShareMenu, setShowShareMenu] = useState(false);
+  const { addToCart, isInCart, getItemQuantity } = useCart();
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+  const params = useParams();
 
-  const product = mockProduct; // In real app, fetch by slug
+  // Find product by slug
+  useEffect(() => {
+    const slug = params.slug as string;
+    const foundProduct = mockProducts.find(p => p.slug === slug);
+    if (foundProduct) {
+      setProduct(foundProduct);
+    }
+    setLoading(false);
+  }, [params.slug]);
 
-  const handleWhatsAppOrder = () => {
-    const message = `Hi! I'm interested in this product:
+  // Close share menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (showShareMenu) {
+        const target = event.target as Element;
+        if (!target.closest('.share-menu-container')) {
+          setShowShareMenu(false);
+        }
+      }
+    };
 
-*${product.name}*
-Price: ₹${product.price.toLocaleString()}
-${product.originalPrice ? `Original Price: ₹${product.originalPrice.toLocaleString()}` : ''}
-${product.discountPercentage ? `Discount: ${product.discountPercentage}%` : ''}
-Quantity: ${quantity}
-${selectedSize ? `Size: ${selectedSize}` : ''}
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showShareMenu]);
 
-Can you provide more details and help me place an order?`;
-    
-    const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "0123456789";
-    const whatsappLink = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappLink, '_blank');
+  if (loading) {
+    return (
+      <main className="min-h-screen pt-20">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-center h-64">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+              <p className="text-muted-foreground">Loading product...</p>
+            </div>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  if (!product) {
+    return (
+      <main className="min-h-screen pt-20">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center py-16">
+            <h1 className="text-2xl font-bold text-foreground mb-4">Product Not Found</h1>
+            <p className="text-muted-foreground mb-6">The product you&apos;re looking for doesn&apos;t exist.</p>
+            <Link href="/collections">
+              <Button>Browse Collections</Button>
+            </Link>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  const handleAddToCart = () => {
+    const cartItem = {
+      id: product.id,
+      name: product.name,
+      slug: product.slug,
+      price: product.price,
+      originalPrice: product.originalPrice,
+      discountPercentage: product.discountPercentage,
+      category: product.category,
+      purity: product.purity,
+      weight: product.weight,
+      image: product.mainImage,
+    };
+
+    // Add the item to cart with the selected quantity
+    for (let i = 0; i < quantity; i++) {
+      addToCart(cartItem);
+    }
+  };
+
+  const handleWishlistToggle = () => {
+    const wishlistItem = {
+      id: product.id,
+      name: product.name,
+      slug: product.slug,
+      price: product.price,
+      originalPrice: product.originalPrice,
+      category: product.category,
+      purity: product.purity,
+      weight: product.weight,
+      image: product.mainImage,
+      rating: product.rating,
+      reviews: product.reviews,
+    };
+
+    if (isInWishlist(product.id)) {
+      removeFromWishlist(product.id);
+    } else {
+      addToWishlist(wishlistItem);
+    }
+  };
+
+  const handleShare = async () => {
+    await shareProduct(product);
+  };
+
+  const handleShareToPlatform = (platform: string) => {
+    switch (platform) {
+      case 'whatsapp':
+        shareToWhatsApp(product);
+        break;
+      case 'facebook':
+        shareToFacebook(product);
+        break;
+      case 'twitter':
+        shareToTwitter(product);
+        break;
+      case 'instagram':
+        shareToInstagram(product);
+        break;
+      default:
+        handleShare();
+    }
+    setShowShareMenu(false);
   };
 
   return (
@@ -171,7 +189,7 @@ Can you provide more details and help me place an order?`;
               {/* Main Image */}
               <div className="relative aspect-square overflow-hidden rounded-2xl bg-gradient-to-br from-primary/10 via-secondary/5 to-primary/5">
                 <div className="w-full h-full flex items-center justify-center">
-                  <span className="text-8xl">💍</span>
+                  <span className="text-8xl">{getCategoryEmoji(product.category)}</span>
                 </div>
                 
                 {/* Product Badges */}
@@ -196,7 +214,7 @@ Can you provide more details and help me place an order?`;
 
               {/* Thumbnail Images */}
               <div className="flex gap-3">
-                {product.images.map((image, index) => (
+                {product.images.map((image: string, index: number) => (
                   <button
                     key={index}
                     onClick={() => setSelectedImage(index)}
@@ -207,7 +225,7 @@ Can you provide more details and help me place an order?`;
                     }`}
                   >
                     <div className="w-full h-full bg-gradient-to-br from-primary/10 via-secondary/5 to-primary/5 flex items-center justify-center">
-                      <span className="text-2xl">💍</span>
+                      <span className="text-2xl">{getCategoryEmoji(product.category)}</span>
                     </div>
                   </button>
                 ))}
@@ -299,22 +317,79 @@ Can you provide more details and help me place an order?`;
               {/* Action Buttons */}
               <div className="space-y-4">
                 <Button 
-                  onClick={handleWhatsAppOrder}
+                  onClick={handleAddToCart}
                   className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                 >
                   <span className="mr-2">🛒</span>
-                  Order via WhatsApp
+                  {isInCart(product.id) ? `Add More to Cart (${getItemQuantity(product.id)} in cart)` : 'Add to Cart'}
                 </Button>
                 
                 <div className="flex gap-3">
-                  <Button variant="outline" className="flex-1 flex items-center gap-2">
-                    <Heart className="w-4 h-4" />
-                    Add to Wishlist
+                  <Button 
+                    variant="outline" 
+                    className={`flex-1 flex items-center gap-2 ${
+                      isInWishlist(product.id) 
+                        ? 'bg-red-50 border-red-200 text-red-600 hover:bg-red-100' 
+                        : 'hover:bg-red-50 hover:border-red-200 hover:text-red-600'
+                    }`}
+                    onClick={handleWishlistToggle}
+                  >
+                    <Heart className={`w-4 h-4 ${isInWishlist(product.id) ? 'fill-current' : ''}`} />
+                    {isInWishlist(product.id) ? 'In Wishlist' : 'Add to Wishlist'}
                   </Button>
-                  <Button variant="outline" className="flex-1 flex items-center gap-2">
-                    <Share2 className="w-4 h-4" />
-                    Share
-                  </Button>
+                  <div className="relative flex-1 share-menu-container">
+                    <Button 
+                      variant="outline" 
+                      className="w-full flex items-center gap-2"
+                      onClick={() => setShowShareMenu(!showShareMenu)}
+                    >
+                      <Share2 className="w-4 h-4" />
+                      Share
+                    </Button>
+                    
+                    {/* Share Menu Dropdown */}
+                    {showShareMenu && (
+                      <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                        <div className="p-2">
+                          <button
+                            onClick={() => handleShareToPlatform('whatsapp')}
+                            className="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-gray-50 rounded-md transition-colors"
+                          >
+                            <MessageCircle className="w-4 h-4 text-green-600" />
+                            <span>WhatsApp</span>
+                          </button>
+                          <button
+                            onClick={() => handleShareToPlatform('facebook')}
+                            className="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-gray-50 rounded-md transition-colors"
+                          >
+                            <Facebook className="w-4 h-4 text-blue-600" />
+                            <span>Facebook</span>
+                          </button>
+                          <button
+                            onClick={() => handleShareToPlatform('twitter')}
+                            className="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-gray-50 rounded-md transition-colors"
+                          >
+                            <Twitter className="w-4 h-4 text-blue-400" />
+                            <span>Twitter</span>
+                          </button>
+                          <button
+                            onClick={() => handleShareToPlatform('instagram')}
+                            className="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-gray-50 rounded-md transition-colors"
+                          >
+                            <Instagram className="w-4 h-4 text-pink-600" />
+                            <span>Instagram</span>
+                          </button>
+                          <button
+                            onClick={handleShare}
+                            className="w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-gray-50 rounded-md transition-colors"
+                          >
+                            <Share2 className="w-4 h-4 text-gray-600" />
+                            <span>Copy Link</span>
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -366,7 +441,7 @@ Can you provide more details and help me place an order?`;
               
               <h3 className="text-xl font-semibold text-foreground mb-4">Key Features</h3>
               <ul className="space-y-2">
-                {product.features.map((feature, index) => (
+                {product.features.map((feature: string, index: number) => (
                   <li key={index} className="flex items-center gap-3">
                     <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
                     <span className="text-muted-foreground">{feature}</span>
@@ -379,7 +454,7 @@ Can you provide more details and help me place an order?`;
             <div>
               <h2 className="text-2xl font-serif font-bold text-foreground mb-6">Specifications</h2>
               <div className="space-y-4">
-                {Object.entries(product.specifications).map(([key, value]) => (
+                {Object.entries(product.specifications).map(([key, value]: [string, string | number]) => (
                   <div key={key} className="flex justify-between py-3 border-b border-border last:border-b-0">
                     <span className="font-medium text-foreground capitalize">
                       {key.replace(/([A-Z])/g, ' $1').trim()}
@@ -402,67 +477,67 @@ Can you provide more details and help me place an order?`;
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {relatedProducts.map((product) => (
-              <Reveal key={product.id} y={20} once>
+            {getRelatedProducts(product).map((relatedProduct) => (
+              <Reveal key={relatedProduct.id} y={20} once>
                 <div className="group bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 transform hover:scale-105 relative overflow-hidden">
                   {/* Product Badges */}
                   <div className="absolute top-3 left-3 flex gap-2 z-10">
-                    {product.isNew && (
+                    {relatedProduct.isNew && (
                       <span className="bg-primary text-primary-foreground px-2 py-1 rounded-full text-xs font-bold">
                         NEW
                       </span>
                     )}
-                    {product.isBestSeller && (
+                    {relatedProduct.isBestSeller && (
                       <span className="bg-secondary text-secondary-foreground px-2 py-1 rounded-full text-xs font-bold">
                         BEST SELLER
                       </span>
                     )}
-                    {product.isDiscounted && (
+                    {relatedProduct.isDiscounted && (
                       <span className="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-bold">
-                        -{product.discountPercentage}%
+                        -{relatedProduct.discountPercentage}%
                       </span>
                     )}
                   </div>
 
                   {/* Product Image */}
                   <div className="relative mb-4 overflow-hidden rounded-xl aspect-square bg-gradient-to-br from-primary/10 via-secondary/5 to-primary/5 flex items-center justify-center">
-                    <span className="text-6xl">💍</span>
+                    <span className="text-6xl">{getCategoryEmoji(relatedProduct.category)}</span>
                   </div>
 
                   {/* Product Info */}
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground font-medium">{product.category}</span>
+                      <span className="text-sm text-muted-foreground font-medium">{relatedProduct.category}</span>
                       <div className="flex items-center gap-1">
                         <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                        <span className="text-sm font-semibold">{product.rating}</span>
-                        <span className="text-xs text-muted-foreground">({product.reviews})</span>
+                        <span className="text-sm font-semibold">{relatedProduct.rating}</span>
+                        <span className="text-xs text-muted-foreground">({relatedProduct.reviews})</span>
                       </div>
                     </div>
 
                     <h3 className="font-semibold text-lg text-foreground group-hover:text-primary transition-colors line-clamp-2">
-                      {product.name}
+                      {relatedProduct.name}
                     </h3>
 
                     <p className="text-sm text-muted-foreground line-clamp-2">
-                      {product.shortDescription}
+                      {relatedProduct.shortDescription}
                     </p>
 
                     <div className="flex items-center gap-4">
-                      <span className="text-2xl font-bold text-foreground">₹{product.price.toLocaleString()}</span>
-                      {product.originalPrice && (
+                      <span className="text-2xl font-bold text-foreground">₹{relatedProduct.price.toLocaleString()}</span>
+                      {relatedProduct.originalPrice && (
                         <span className="text-lg text-muted-foreground line-through">
-                          ₹{product.originalPrice.toLocaleString()}
+                          ₹{relatedProduct.originalPrice.toLocaleString()}
                         </span>
                       )}
                     </div>
 
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <Gem className="w-4 h-4" />
-                      <span>{product.purity} • {product.weight}g</span>
+                      <span>{relatedProduct.purity} • {relatedProduct.weight}g</span>
                     </div>
 
-                    <Link href={`/product/${product.slug}`}>
+                    <Link href={`/product/${relatedProduct.slug}`}>
                       <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground group-hover:shadow-lg transition-all duration-300 rounded-xl py-3 text-lg font-semibold">
                         View Details
                       </Button>
