@@ -45,7 +45,7 @@ export function Header() {
 
                     {/* Right: icons */}
                     <div className="hidden md:flex items-center space-x-4">
-                        <ThemeToggle />
+                        
                         <Link href="/wishlist" className="relative p-2 text-foreground hover:text-primary transition-colors">
                             <Heart className="w-6 h-6" />
                             {wishlistCount > 0 && (
@@ -69,7 +69,7 @@ export function Header() {
 
                     {/* Mobile menu button */}
                     <div className="md:hidden flex items-center space-x-2">
-                        <ThemeToggle />
+                       
                         <Link href="/wishlist" className="relative p-2 text-foreground hover:text-primary transition-colors">
                             <Heart className="w-6 h-6" />
                             {wishlistCount > 0 && (
