@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
+import PreCheckoutForm, { type CustomerDetails } from '@/components/PreCheckoutForm';
+import { generateOrderId, formatOrderTimestamp } from '@/lib/utils';
 import { 
   ShoppingCart, 
   X, 
@@ -18,30 +20,29 @@ import Link from 'next/link';
 export function Cart() {
   const [isOpen, setIsOpen] = useState(false);
   const { state, removeFromCart, updateQuantity, clearCart } = useCart();
+  const [showForm, setShowForm] = useState(false);
 
   const handleWhatsAppOrder = () => {
     if (state.items.length === 0) return;
+    setShowForm(true);
+  };
 
+  const sendWhatsAppWithDetails = (details: CustomerDetails) => {
+    const orderId = generateOrderId();
+    const timestamp = formatOrderTimestamp();
     const itemsText = state.items.map(item => 
-      `• ${item.name} (${item.purity} Gold, ${item.weight}g)
-       Quantity: ${item.quantity}
-       Price: ₹${item.price.toLocaleString()} each
-       Total: ₹${(item.price * item.quantity).toLocaleString()}`
+      `• ${item.name} (${item.purity} Gold, ${item.weight}g)\n  Qty: ${item.quantity}\n  Price: ₹${item.price.toLocaleString()}\n  Line Total: ₹${(item.price * item.quantity).toLocaleString()}`
     ).join('\n\n');
 
-    const message = `Hi! I'm interested in placing an order for these items:
+    const headerText = `Order ID: ${orderId}\nDate: ${timestamp}`;
+    const customerText = `Customer Details:\nName: ${details.name}\nPhone: ${details.phone}${details.email ? `\nEmail: ${details.email}` : ''}\nAddress: ${details.address}, ${details.city} - ${details.pincode}${details.notes ? `\nNotes: ${details.notes}` : ''}`;
 
-${itemsText}
+    const message = `${headerText}\n\n${customerText}\n\nOrder Items:\n${itemsText}\n\nTotal Items: ${state.totalItems}\nTotal Amount: ₹${state.totalPrice.toLocaleString()}${state.totalSavings > 0 ? `\nTotal Savings: ₹${state.totalSavings.toLocaleString()}` : ''}`;
 
-Total Items: ${state.totalItems}
-Total Amount: ₹${state.totalPrice.toLocaleString()}
-${state.totalSavings > 0 ? `Total Savings: ₹${state.totalSavings.toLocaleString()}` : ''}
-
-Can you help me complete this order?`;
-    
     const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "0123456789";
     const whatsappLink = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
     window.open(whatsappLink, '_blank');
+    setShowForm(false);
   };
 
   return (
@@ -226,6 +227,12 @@ Can you help me complete this order?`;
           </div>
         </div>
       )}
+
+      <PreCheckoutForm
+        isOpen={showForm}
+        onClose={() => setShowForm(false)}
+        onSubmit={sendWhatsAppWithDetails}
+      />
     </>
   );
 }
