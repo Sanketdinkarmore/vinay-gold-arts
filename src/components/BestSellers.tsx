@@ -1,5 +1,7 @@
 "use client";
 
+
+
 import { Star, Heart, ShoppingCart, Share2 } from "lucide-react";
 import { Button } from "./ui/button";
 import { SectionHeader } from "./SectionHeader";
